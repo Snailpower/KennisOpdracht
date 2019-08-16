@@ -1,6 +1,8 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using tainicom.Aether.Physics2D;
+using System;
 
 namespace DownwellClone
 {
@@ -11,10 +13,18 @@ namespace DownwellClone
     {
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
+
+        int state = 0;
+
+        Texture2D startScreen;
+        CharacterEntity character;
         
         public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
+            graphics.PreferredBackBufferWidth = 420;
+            graphics.PreferredBackBufferHeight = 840;
+
             Content.RootDirectory = "Content";
         }
 
@@ -27,6 +37,7 @@ namespace DownwellClone
         protected override void Initialize()
         {
             // TODO: Add your initialization logic here
+            character = new CharacterEntity(this.GraphicsDevice, this.Content.Load<Texture2D>("charactersheet"));
 
             base.Initialize();
         }
@@ -41,6 +52,7 @@ namespace DownwellClone
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
             // TODO: use this.Content to load your game content here
+            startScreen = this.Content.Load<Texture2D>("TitleScreen");
         }
 
         /// <summary>
@@ -59,8 +71,29 @@ namespace DownwellClone
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Update(GameTime gameTime)
         {
-            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
+            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape) && state == 0)
                 Exit();
+
+            //Introscreen state of the game
+            if (state == 0)
+            {
+                if (Keyboard.GetState().IsKeyDown(Keys.Space))
+                {
+                    state += 1;
+                }
+            }
+
+            //Play state of the game
+            else if (state == 1)
+            {
+                character.Update(gameTime, GraphicsDevice);
+            }
+
+            //Death or Game Over state of the game
+            else if (state == 2)
+            {
+
+            }
 
             // TODO: Add your update logic here
 
@@ -73,9 +106,30 @@ namespace DownwellClone
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Draw(GameTime gameTime)
         {
-            GraphicsDevice.Clear(Color.CornflowerBlue);
+            GraphicsDevice.Clear(Color.Black);
 
             // TODO: Add your drawing code here
+
+            //Introscreen state of the game
+            if (state == 0)
+            {
+                spriteBatch.Begin();
+                spriteBatch.Draw(startScreen, position: Vector2.Zero);
+                spriteBatch.End();
+            }
+            //Play state of the game
+            else if (state == 1)
+            {
+                spriteBatch.Begin();
+                character.Draw(spriteBatch);
+                spriteBatch.End();
+            }
+            //Death or Game Over state of the game
+            else if (state == 2)
+            {
+
+            }
+            
 
             base.Draw(gameTime);
         }
