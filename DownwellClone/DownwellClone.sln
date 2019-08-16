@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.28307.779
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DownwellClone", "DownwellClone\DownwellClone.csproj", "{F85EB6C6-D5FC-4FFC-97C4-58FF13DC3C5F}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{F85EB6C6-D5FC-4FFC-97C4-58FF13DC3C5F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F85EB6C6-D5FC-4FFC-97C4-58FF13DC3C5F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F85EB6C6-D5FC-4FFC-97C4-58FF13DC3C5F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F85EB6C6-D5FC-4FFC-97C4-58FF13DC3C5F}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {9184CAE7-B5B1-477B-B9BA-343FD19C65E3}
+	EndGlobalSection
+EndGlobal
