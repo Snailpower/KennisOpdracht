@@ -3,6 +3,9 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using tainicom.Aether.Physics2D;
 using System;
+using System.Collections.Generic;
+using System.Collections;
+using System.Diagnostics;
 
 namespace DownwellClone
 {
@@ -18,7 +21,17 @@ namespace DownwellClone
 
         Texture2D startScreen;
         CharacterEntity character;
-        
+        List<Cloud> clouds = new List<Cloud>();
+        List<Background> SkyBackground = new List<Background>();
+
+        int cloudAmount = 4;
+        Random rand = new Random();
+        int currentCloud = 0;
+
+        int backgroundAmount = 2;
+        int currentBG = 1;
+
+
         public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
@@ -38,6 +51,24 @@ namespace DownwellClone
         {
             // TODO: Add your initialization logic here
             character = new CharacterEntity(this.GraphicsDevice, this.Content.Load<Texture2D>("charactersheet"));
+
+            for (int i = 0; i < cloudAmount; i++)
+            {
+                var newCloud = new Cloud(this.GraphicsDevice, this.Content.Load<Texture2D>("Cloud"));
+
+                newCloud.X = rand.Next(100, 600);
+
+                clouds.Add(newCloud);
+            }
+
+            for (int i = 0; i < backgroundAmount; i++)
+            {
+                var newBG = new Background(this.GraphicsDevice, this.Content.Load<Texture2D>("BGSky"));
+
+                SkyBackground.Add(newBG);
+            }
+
+            
 
             base.Initialize();
         }
@@ -87,6 +118,40 @@ namespace DownwellClone
             else if (state == 1)
             {
                 character.Update(gameTime, GraphicsDevice);
+
+                if (SkyBackground[0].Y <= 0)
+                {
+                    SkyBackground[1].Y = SkyBackground[0].Y + this.Content.Load<Texture2D>("BGSky").Height;
+                }
+                else if (SkyBackground[0].Reset(SkyBackground[0].Y))
+                {
+                    SkyBackground[0].Y = SkyBackground[1].Y + this.Content.Load<Texture2D>("BGSky").Height;
+                }
+
+                SkyBackground[0].Update(gameTime, GraphicsDevice, 0.3f);
+                SkyBackground[1].Update(gameTime, GraphicsDevice, 0.3f);
+
+
+                for (int i = 0; i < clouds.Count; i++)
+                {
+                    if (i == currentCloud)
+                    {
+                        clouds[i].Update(gameTime, GraphicsDevice, 1f);
+                    }
+                    else if (clouds[currentCloud].Reset(clouds[currentCloud].Y))
+                    {
+                        clouds[currentCloud].X = rand.Next(100, 600);
+
+                        if (currentCloud < cloudAmount - 1)
+                        {
+                            currentCloud++;
+                        }
+                        else
+                        {
+                            currentCloud = 0;
+                        }
+                    }
+                }
             }
 
             //Death or Game Over state of the game
@@ -106,7 +171,7 @@ namespace DownwellClone
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Draw(GameTime gameTime)
         {
-            GraphicsDevice.Clear(Color.Black);
+            GraphicsDevice.Clear(Color.CadetBlue);
 
             // TODO: Add your drawing code here
 
@@ -121,8 +186,19 @@ namespace DownwellClone
             else if (state == 1)
             {
                 spriteBatch.Begin();
+                foreach (Background bg in SkyBackground)
+                {
+                    bg.Draw(spriteBatch);
+                }
                 character.Draw(spriteBatch);
+
+                foreach (Cloud cloud in clouds)
+                {
+                    cloud.Draw(spriteBatch);
+                }
+
                 spriteBatch.End();
+                
             }
             //Death or Game Over state of the game
             else if (state == 2)

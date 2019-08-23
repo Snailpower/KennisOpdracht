@@ -39,10 +39,7 @@ namespace DownwellClone
 
         public CharacterEntity(GraphicsDevice graphicsDevice, Texture2D spritesheet)
         {
-            if (characterSheetTexture == null)
-            {
-                characterSheetTexture = spritesheet;
-            }
+            characterSheetTexture = spritesheet;
 
             scale = new Vector2(targetX / characterSheetTexture.Width, targetX / characterSheetTexture.Width);
             targetY = characterSheetTexture.Height * scale.Y;
@@ -65,6 +62,8 @@ namespace DownwellClone
             standStill.AddFrame(new Rectangle(16, 0, 16, 16), TimeSpan.FromSeconds(.25));
             standStill.AddFrame(new Rectangle(0, 0, 16, 16), TimeSpan.FromSeconds(.25));
             standStill.AddFrame(new Rectangle(32, 0, 16, 16), TimeSpan.FromSeconds(.25));
+
+            currentAnimation = standStill;
         }
 
         /// <summary>
@@ -117,10 +116,6 @@ namespace DownwellClone
             Vector2 topLeftOfSprite = new Vector2(this.X, this.Y);
             Color tintColor = Color.White;
 
-            if (currentAnimation == null)
-            {
-                currentAnimation = standStill;
-            }
             var sourceRectangle = currentAnimation.CurrentRectangle;
 
             spriteBatch.Draw(characterSheetTexture, position: topLeftOfSprite, sourceRectangle: sourceRectangle, color: tintColor, scale: scale);
