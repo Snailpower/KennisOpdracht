@@ -46,6 +46,10 @@
     <Compile Include="AnimationFrame.cs" />
     <Compile Include="CharacterEntity.cs" />
     <Compile Include="Background.cs" />
+    <Compile Include="Arrow.cs" />
+    <Compile Include="UI.cs" />
+    <Compile Include="Pickup.cs" />
+    <Compile Include="Enemy.cs" />
     <Compile Include="Cloud.cs" />
     <Compile Include="Game1.cs" />
     <Compile Include="Program.cs" />

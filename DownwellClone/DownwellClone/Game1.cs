@@ -18,15 +18,34 @@ namespace DownwellClone
         SpriteBatch spriteBatch;
 
         int state = 0;
+        bool spacebarDown = false;
+        bool pickupActive = false;
+        float score;
+        private SpriteFont font;
 
         Texture2D startScreen;
+        Texture2D endScreen;
+        UI userInterface;
+
         CharacterEntity character;
         List<Cloud> clouds = new List<Cloud>();
+        List<Enemy> enemies = new List<Enemy>();
         List<Background> SkyBackground = new List<Background>();
+        List<Arrow> arrows = new List<Arrow>();
+        Arrow arrow;
+        Pickup pickup;
+
+        float pickupTimer = 8f;
+        float currentPTime;
 
         int cloudAmount = 4;
-        Random rand = new Random();
+        Random randC = new Random();
         int currentCloud = 0;
+
+        int enemyAmount = 3;
+        Random randE = new Random();
+        int currentEnemy;
+        List<String> types = new List<string>();
 
         int backgroundAmount = 2;
         int currentBG = 1;
@@ -52,11 +71,26 @@ namespace DownwellClone
             // TODO: Add your initialization logic here
             character = new CharacterEntity(this.GraphicsDevice, this.Content.Load<Texture2D>("charactersheet"));
 
+            userInterface = new UI(this.GraphicsDevice, this.Content.Load<Texture2D>("healthbarFill"), this.Content.Load<Texture2D>("arrowFill"));
+
+            types.Add("snake");
+            types.Add("shroom");
+            types.Add("blob");
+
+            for (int i = 0; i < types.Count; i++)
+            {
+                var newEnemy = new Enemy(this.GraphicsDevice, this.Content.Load<Texture2D>("charactersheet"), types[i]);
+
+                newEnemy.X = randE.Next(16, 404);
+
+                enemies.Add(newEnemy);
+            }
+
             for (int i = 0; i < cloudAmount; i++)
             {
                 var newCloud = new Cloud(this.GraphicsDevice, this.Content.Load<Texture2D>("Cloud"));
 
-                newCloud.X = rand.Next(100, 600);
+                newCloud.X = randC.Next(100, 600);
 
                 clouds.Add(newCloud);
             }
@@ -68,7 +102,9 @@ namespace DownwellClone
                 SkyBackground.Add(newBG);
             }
 
-            
+            pickup = new Pickup(this.GraphicsDevice, this.Content.Load<Texture2D>("lemon"), randE.Next(80, 300));
+
+            currentPTime = pickupTimer;
 
             base.Initialize();
         }
@@ -84,6 +120,10 @@ namespace DownwellClone
 
             // TODO: use this.Content to load your game content here
             startScreen = this.Content.Load<Texture2D>("TitleScreen");
+
+            endScreen = this.Content.Load<Texture2D>("EndScreen");
+
+            font = Content.Load<SpriteFont>("Segoe");
         }
 
         /// <summary>
@@ -108,9 +148,16 @@ namespace DownwellClone
             //Introscreen state of the game
             if (state == 0)
             {
-                if (Keyboard.GetState().IsKeyDown(Keys.Space))
+                score = 0;
+
+                if (Keyboard.GetState().IsKeyDown(Keys.Space) && !spacebarDown)
                 {
                     state += 1;
+                    spacebarDown = true;
+                }
+                if (Keyboard.GetState().IsKeyUp(Keys.Space))
+                {
+                    spacebarDown = false;
                 }
             }
 
@@ -118,6 +165,35 @@ namespace DownwellClone
             else if (state == 1)
             {
                 character.Update(gameTime, GraphicsDevice);
+                userInterface.Update(character);
+
+                score += (float)gameTime.ElapsedGameTime.TotalSeconds;
+
+                if (character.Health <= 0)
+                {
+                    state = 2;
+                }
+
+                if (pickup.Hit(character) || !pickup.Hit(character) && pickup.Y <= -20)
+                {
+                    pickupActive = false;
+                    pickup.Y = 840;
+                    pickup.X = randE.Next(80, 300);
+                }
+
+                currentPTime -= (float)gameTime.ElapsedGameTime.TotalSeconds;
+
+                if (pickupActive)
+                {
+                    pickup.Update(gameTime, GraphicsDevice);
+                }
+
+                if (currentPTime <= 0)
+                {
+                    pickupActive = true;
+                    currentPTime = pickupTimer;
+                }
+                
 
                 if (SkyBackground[0].Y <= 0)
                 {
@@ -138,9 +214,25 @@ namespace DownwellClone
                     {
                         clouds[i].Update(gameTime, GraphicsDevice, 1f);
                     }
+                    else if (clouds[currentCloud].Hit(character))
+                    {
+                        character.Health--;
+
+                        clouds[currentCloud].X = randC.Next(100, 600);
+                        clouds[currentCloud].Y = clouds[currentCloud].startY;
+
+                        if (currentCloud < cloudAmount - 1)
+                        {
+                            currentCloud++;
+                        }
+                        else
+                        {
+                            currentCloud = 0;
+                        }
+                    }
                     else if (clouds[currentCloud].Reset(clouds[currentCloud].Y))
                     {
-                        clouds[currentCloud].X = rand.Next(100, 600);
+                        clouds[currentCloud].X = randC.Next(100, 600);
 
                         if (currentCloud < cloudAmount - 1)
                         {
@@ -152,12 +244,89 @@ namespace DownwellClone
                         }
                     }
                 }
+
+                for (int i = 0; i < enemies.Count; i++)
+                {
+                    if (i == currentEnemy)
+                    {
+                        enemies[i].Update(gameTime, GraphicsDevice, character);
+                    }
+                    else if (enemies[currentEnemy].Hit(enemies[currentEnemy].Y))
+                    {
+                        if (enemies[currentEnemy].X <= (character.X + 50) && enemies[currentEnemy].X >= (character.X - 50))
+                        {
+                            character.Health--;
+                        }
+
+                        enemies[currentEnemy].X = randE.Next(16, 404);
+                        enemies[currentEnemy].Y = enemies[currentEnemy].startY;
+                        
+
+                        if (currentEnemy < enemyAmount - 1)
+                        {
+                            currentEnemy++;
+                        }
+                        else
+                        {
+                            currentEnemy = 0;
+                        }
+                    }
+                }
+
+                if (Keyboard.GetState().IsKeyDown(Keys.Space) && !spacebarDown && character.Ammo > 0)
+                {
+                    arrows.Add(new Arrow(this.GraphicsDevice, this.Content.Load<Texture2D>("arrow"), character.X));
+
+                    spacebarDown = true;
+
+                    character.Ammo--;
+                }
+
+                if (Keyboard.GetState().IsKeyUp(Keys.Space))
+                {
+                    spacebarDown = false;
+                }
+
+                for (int i = 0; i < arrows.Count; i++)
+                {
+                    arrows[i].Update(gameTime, this.GraphicsDevice, enemies[currentEnemy]);
+
+                    if (arrows[i].Y >= 840)
+                    {
+                        arrows.Remove(arrows[i]);
+                    }
+
+                    if (arrows.Count > 0 && arrows[i].Hit(enemies[currentEnemy]))
+                    {
+                        arrows.Remove(arrows[i]);
+
+                        enemies[currentEnemy].X = randE.Next(16, 404);
+                        enemies[currentEnemy].Y = enemies[currentEnemy].startY;
+
+                        if (currentEnemy < enemyAmount - 1)
+                        {
+                            currentEnemy++;
+                        }
+                        else
+                        {
+                            currentEnemy = 0;
+                        }
+                    }
+                }
+
+                
             }
 
             //Death or Game Over state of the game
             else if (state == 2)
             {
-
+                if (Keyboard.GetState().IsKeyDown(Keys.Space) && !spacebarDown)
+                {
+                    character.Health = 3;
+                    character.Ammo = 5;
+                    state = 0;
+                    spacebarDown = true;
+                }
             }
 
             // TODO: Add your update logic here
@@ -186,16 +355,30 @@ namespace DownwellClone
             else if (state == 1)
             {
                 spriteBatch.Begin();
-                foreach (Background bg in SkyBackground)
+                for (int i = 0; i < SkyBackground.Count; i++)
                 {
-                    bg.Draw(spriteBatch);
+                    SkyBackground[i].Draw(spriteBatch);
                 }
+                for (int i = 0; i < enemies.Count; i++)
+                {
+                    enemies[i].Draw(spriteBatch);
+                }
+
                 character.Draw(spriteBatch);
 
-                foreach (Cloud cloud in clouds)
+                for (int i = 0; i < clouds.Count; i++)
                 {
-                    cloud.Draw(spriteBatch);
+                    clouds[i].Draw(spriteBatch);
                 }
+
+                pickup.Draw(spriteBatch);
+
+                for (int i = 0; i < arrows.Count; i++)
+                {
+                    arrows[i].Draw(spriteBatch);
+                }
+
+                userInterface.Draw(spriteBatch);
 
                 spriteBatch.End();
                 
@@ -203,7 +386,10 @@ namespace DownwellClone
             //Death or Game Over state of the game
             else if (state == 2)
             {
-
+                spriteBatch.Begin();
+                spriteBatch.Draw(endScreen, position: Vector2.Zero);
+                spriteBatch.DrawString(font, "" + (float)Math.Floor(score), new Vector2(GraphicsDevice.Viewport.Width /2 - 10, GraphicsDevice.Viewport.Height / 2 - 20), Color.White);
+                spriteBatch.End();
             }
             
 

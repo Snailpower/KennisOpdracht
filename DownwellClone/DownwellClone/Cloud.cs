@@ -15,7 +15,7 @@ namespace DownwellClone
         public static Texture2D cloudTexture;
 
         float startX = 20;
-        float startY;
+        public float startY;
         float targetY;
 
         Vector2 scale;
@@ -23,6 +23,19 @@ namespace DownwellClone
         float scaleFactor = 2;
 
         Random rand = new Random();
+
+        public bool Hit(CharacterEntity player)
+        {
+            if (this.X <= (player.X + cloudTexture.Width /2) && this.X >= (player.X - cloudTexture.Width /2) && this.Y <= (player.Y + 30) && this.Y >= (player.Y + 10))
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
 
         public bool Reset(float currentHeight)
         {
@@ -80,8 +93,9 @@ namespace DownwellClone
         public void Draw(SpriteBatch spriteBatch)
         {
             Vector2 position = new Vector2(this.X, this.Y);
+            Color tintColor = Color.DarkBlue;
 
-            spriteBatch.Draw(cloudTexture, position: position, scale: scale);
+            spriteBatch.Draw(cloudTexture, position: position, scale: scale, color: tintColor);
         }
     }
 }

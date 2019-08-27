@@ -25,6 +25,18 @@ namespace DownwellClone
 
         Animation currentAnimation;
 
+        public int Health
+        {
+            get;
+            set;
+        }
+
+        public int Ammo
+        {
+            get;
+            set;
+        }
+
         public float X
         {
             get;
@@ -40,6 +52,9 @@ namespace DownwellClone
         public CharacterEntity(GraphicsDevice graphicsDevice, Texture2D spritesheet)
         {
             characterSheetTexture = spritesheet;
+
+            Health = 3;
+            Ammo = 5;
 
             scale = new Vector2(targetX / characterSheetTexture.Width, targetX / characterSheetTexture.Width);
             targetY = characterSheetTexture.Height * scale.Y;
