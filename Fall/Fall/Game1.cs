@@ -53,6 +53,8 @@ namespace DownwellClone
 
         public Game1()
         {
+
+            //TO DO: Edit bufferwidth and height to always fit in a screen
             graphics = new GraphicsDeviceManager(this);
             graphics.PreferredBackBufferWidth = 420;
             graphics.PreferredBackBufferHeight = 840;

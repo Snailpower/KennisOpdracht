@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <MSBuildAllProjects>$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
+    <HasSharedItems>true</HasSharedItems>
+    <SharedGUID>2d13a3df-b970-4154-b657-65e3162686f2</SharedGUID>
+  </PropertyGroup>
+  <PropertyGroup Label="Configuration">
+    <Import_RootNamespace>Fall</Import_RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <MonoGameContentReference Include="$(MSBuildThisFileDirectory)Content\Content.mgcb" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)Game1.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="$(MSBuildThisFileDirectory)Content\arrow.png" />
+    <Content Include="$(MSBuildThisFileDirectory)Content\arrowFill.png" />
+    <Content Include="$(MSBuildThisFileDirectory)Content\BGSky.png" />
+    <Content Include="$(MSBuildThisFileDirectory)Content\charactersheet.png" />
+    <Content Include="$(MSBuildThisFileDirectory)Content\Cloud.png" />
+    <Content Include="$(MSBuildThisFileDirectory)Content\EndScreen.png" />
+    <Content Include="$(MSBuildThisFileDirectory)Content\healthbarFill.png" />
+    <Content Include="$(MSBuildThisFileDirectory)Content\lemon.png" />
+    <Content Include="$(MSBuildThisFileDirectory)Content\TitleScreen.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="$(MSBuildThisFileDirectory)Content\Content.mgcb" />
+    <None Include="$(MSBuildThisFileDirectory)Content\File.spritefont" />
+  </ItemGroup>
+</Project>
