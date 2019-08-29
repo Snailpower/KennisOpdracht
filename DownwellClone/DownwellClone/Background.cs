@@ -50,8 +50,6 @@ namespace DownwellClone
         {
             BGTexture = texture;
 
-            //scale = new Vector2(BGTexture.Width / (BGTexture.Width * scaleFactor), BGTexture.Height / (BGTexture.Height * scaleFactor));
-
             this.X = startX;
             this.Y = startY;
         }
@@ -61,6 +59,7 @@ namespace DownwellClone
             //The height in the game that the bg has to travel to for a reset
             targetY = 0 - (BGTexture.Height);
 
+            //Move the BG upwards
             this.Y -= ((float)gameTime.ElapsedGameTime.TotalSeconds * graphicsDevice.Viewport.Height) * scrollSpeed;
 
             if (this.Y <= targetY)

@@ -34,6 +34,7 @@ namespace DownwellClone
             set;
         }
 
+        //Detect an arrow hit with an enemy
         public bool Hit(Enemy enemy)
         {
             if (this.X <= (enemy.X + 16) && this.X >= (enemy.X - 16) && this.Y <= (enemy.Y + 16) && this.Y >= (enemy.Y - 16))
@@ -57,6 +58,7 @@ namespace DownwellClone
             Y = startY;
         }
 
+        //Make the arrow fly downwards
         public void Update(GameTime gameTime, GraphicsDevice graphicsDevice, Enemy enemy)
         {
             this.Y += (float)gameTime.ElapsedGameTime.TotalSeconds * 200;

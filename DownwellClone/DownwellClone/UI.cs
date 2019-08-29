@@ -13,12 +13,14 @@ namespace DownwellClone
 {
     class UI
     {
+        //The textures for both health and arrow UI
         static Texture2D healthFill;
 
         static Texture2D arrowFill;
 
+        //Segments of health to show
         List<Rectangle> healthvalue = new List<Rectangle>();
-
+        //Segments of arrows to show
         List<Rectangle> arrowvalue = new List<Rectangle>();
 
         Rectangle currentHealth;
@@ -37,6 +39,7 @@ namespace DownwellClone
 
             arrowFill = textureArrow;
 
+            //Adding all 6 states of arrow parts of the UI (having 0 to having 5)
             Rectangle arrow5 = new Rectangle(0, 0, 80, 16);
 
             Rectangle arrow4 = new Rectangle(0, 0, 64, 16);
@@ -58,13 +61,14 @@ namespace DownwellClone
 
             currentArrow = arrowvalue[5];
 
+            //Adding all 4 states of health parts of the UI (0 to 3)
             Rectangle health3 = new Rectangle(0, 0, 96, 16);
 
             Rectangle health2 = new Rectangle(0, 0, 64, 16);
 
             Rectangle health1 = new Rectangle(0, 0, 32, 16);
 
-            Rectangle health0 = new Rectangle(0, 0, 32, 16);
+            Rectangle health0 = new Rectangle(0, 0, 0, 16);
 
             healthvalue.Add(health0);
             healthvalue.Add(health1);
@@ -75,6 +79,7 @@ namespace DownwellClone
 
         }
 
+        //Get the player values to update the UI
         public void Update(CharacterEntity player)
         {
             currentHealth = healthvalue[player.Health];

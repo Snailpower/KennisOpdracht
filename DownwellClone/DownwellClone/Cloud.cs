@@ -24,6 +24,7 @@ namespace DownwellClone
 
         Random rand = new Random();
 
+        //Detect a hit with the player
         public bool Hit(CharacterEntity player)
         {
             if (this.X <= (player.X + cloudTexture.Width /2) && this.X >= (player.X - cloudTexture.Width /2) && this.Y <= (player.Y + 30) && this.Y >= (player.Y + 10))
@@ -36,7 +37,7 @@ namespace DownwellClone
             }
         }
 
-
+        //Detect a hit with the top of the screen
         public bool Reset(float currentHeight)
         {
             if (currentHeight <= (targetY - cloudTexture.Height))
@@ -74,6 +75,7 @@ namespace DownwellClone
             this.Y = startY;
         }
 
+        //Automatically reset the cloud at the top of the screen and move it upwards when active
         public void Update(GameTime gameTime, GraphicsDevice graphicsDevice, float scrollSpeed)
         {
             //The height in the game that the cloud has to travel to

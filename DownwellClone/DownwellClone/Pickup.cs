@@ -15,9 +15,6 @@ namespace DownwellClone
     {
         static Texture2D pickupTexture;
 
-        float targetX = 50;
-        float targetY;
-
         public float startY = 840;
 
         Vector2 scale;
@@ -36,6 +33,7 @@ namespace DownwellClone
 
         public bool Hit(CharacterEntity player)
         {
+            //Detect if the pickup is close enough to the player for a hit
             if (this.X <= (player.X + 40) && this.X >= (player.X - 40) && this.Y <= (player.Y + 40) && this.Y >= (player.Y - 40))
             {
                 if (player.Ammo < 5)
@@ -55,6 +53,7 @@ namespace DownwellClone
             }
         }
 
+        //Starting values of a pickup
         public Pickup(GraphicsDevice graphicsDevice, Texture2D texture, float StartX)
         {
             pickupTexture = texture;
@@ -66,11 +65,13 @@ namespace DownwellClone
             Y = startY;
         }
 
+        //Make the pickup fly upwards
         public void Update(GameTime gameTime, GraphicsDevice graphicsDevice)
         {
             this.Y -= (float)gameTime.ElapsedGameTime.TotalSeconds * 200;
         }
 
+        //Drawing code for pickup
         public void Draw(SpriteBatch spriteBatch)
         {
             Vector2 topLeftOfSprite = new Vector2(this.X, this.Y);

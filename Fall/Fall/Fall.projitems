@@ -21,6 +21,7 @@
     <Content Include="$(MSBuildThisFileDirectory)Content\charactersheet.png" />
     <Content Include="$(MSBuildThisFileDirectory)Content\Cloud.png" />
     <Content Include="$(MSBuildThisFileDirectory)Content\EndScreen.png" />
+    <Content Include="$(MSBuildThisFileDirectory)Content\Friends Theme Song %288 Bit Remix Cover Version%29 - 8 Bit Universe.mp3" />
     <Content Include="$(MSBuildThisFileDirectory)Content\healthbarFill.png" />
     <Content Include="$(MSBuildThisFileDirectory)Content\lemon.png" />
     <Content Include="$(MSBuildThisFileDirectory)Content\TitleScreen.png" />

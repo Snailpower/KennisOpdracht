@@ -28,6 +28,7 @@ namespace DownwellClone
 
         Animation currentAnimation;
 
+        //Detect a hit with the top of the screen
         public bool Hit(float currentHeight)
         {
             if (currentHeight <= (targetY))
@@ -52,6 +53,7 @@ namespace DownwellClone
             set;
         }
 
+        //Get position of the player to move towards with a velocity, then normalize it
         Vector2 GetDesiredVelocityFromPlayerPos(CharacterEntity player)
         {
             Vector2 desiredVelocity = new Vector2();
@@ -77,8 +79,7 @@ namespace DownwellClone
 
             Y = startY;
 
-            //Defining which parts of the spritesheet need to be put in per animation (every individual frame is 16x16)
-
+            //Defining which parts of the spritesheet need to be put in per animation and per enemy type (every individual frame is 16x16)
             
             if (type == "snake")
             {
@@ -140,14 +141,11 @@ namespace DownwellClone
                 moveUp.AddFrame(new Rectangle(144, 112, 16, 16), TimeSpan.FromSeconds(.25));
                 moveUp.AddFrame(new Rectangle(176, 112, 16, 16), TimeSpan.FromSeconds(.25));
             }
-            
-
-
             currentAnimation = moveUp;
         }
 
         /// <summary>
-        /// Makes sure that the player moves inbetween the game borders on left and right keypress and changes animation accordingly
+        /// Moves enemies towards the player when entering the screen based on the player's position
         /// </summary>
         /// <param name="gameTime"></param>
         /// <param name="graphicsDevice"></param>
